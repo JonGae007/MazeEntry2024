@@ -34,44 +34,6 @@ const int Enable3 = 4;
 const int Enable4 = 5;
 //Variabeln
 int Speed = 150;
-void loop() {
-  for (int i = 0; i < 4; i++) {
-    uint16_t r = red(i);
-    uint16_t g = green(i);
-    uint16_t b = blue(i);
-
-    if (r > 50 && r < 70 && g > 60 && g < 80 && b > 40 && b < 60) {
-      Serial.println("Silber");
-      digitalWrite(52, HIGH);
-      delay(1000);
-      digitalWrite(52, LOW);
-    }
-    if (r < 10 && g < 10 && b < 10) {
-      Serial.println("Schwarz");
-      digitalWrite(52, HIGH);
-      delay(5000);
-      digitalWrite(52, LOW);
-    }
-    if (r > 30 && r < 45 && g > 20 && g < 30 && b > 10 && b < 25) {
-      Serial.println("Rot");
-      digitalWrite(52, HIGH);
-      delay(3000);
-      digitalWrite(52, LOW);
-    }
-  }
-  if (readUs(trigRechts, echoRechts) > 10) {
-    drehenr(510);
-    vorne();
-    delay(710);
-  } else if (readUs(trigLinks, echoLinks) > 10) {
-    drehenl(510);
-    vorne();
-    delay(700);
-  } else if (readUs(trigVorne, echoVorne) < 10) {
-    drehenr(510);
-    vorne();
-  }
-}
 void setup() {
   Serial.begin(9600);
   pinMode(trigVorne, OUTPUT);
@@ -97,6 +59,46 @@ void setup() {
   for (uint8_t i = 0; i < 4; i++) {
     selectChannel(i);
     sensors[i].begin();
+  }
+}
+void loop() {
+  for (int i = 0; i < 4; i++) {
+    uint16_t r = red(i);
+    uint16_t g = green(i);
+    uint16_t b = blue(i);
+
+    if (b > 40 && b < 60) {
+      Serial.println("Silber");
+      digitalWrite(52, HIGH);
+      delay(1000);
+      digitalWrite(52, LOW);
+    }
+    if (b < 10) {
+      Serial.println("Schwarz");
+      digitalWrite(52, HIGH);
+      delay(5000);
+      digitalWrite(52, LOW);
+    }
+    if (b > 10 && b < 25) {
+      Serial.println("Rot");
+      digitalWrite(52, HIGH);
+      delay(3000);
+      digitalWrite(52, LOW);
+    }
+    Serial.begin(9600);
+    Serial.println(b);
+  }
+  if (readUs(trigRechts, echoRechts) > 10) {
+    drehenr(510);
+    vorne();
+    delay(710);
+  } else if (readUs(trigLinks, echoLinks) > 10) {
+    drehenl(510);
+    vorne();
+    delay(700);
+  } else if (readUs(trigVorne, echoVorne) < 10) {
+    drehenr(510);
+    vorne();
   }
 }
 void vorne() {                       // vorne
