@@ -11,6 +11,10 @@ Adafruit_TCS34725 sensors[4] = {
 
 //Pinbelegung
 int stepsToMove = 512;
+const int IN1 = 42;
+const int IN2 = 44;
+const int IN3 = 46;
+const int IN4 = 48;
 const int stepsPerRevolution = 2048;
 const int trigVorne = 11;
 const int echoVorne = 10;
@@ -40,6 +44,10 @@ int Linksdrehung = 600;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
   pinMode(trigVorne, OUTPUT);
   pinMode(echoVorne, INPUT);
   pinMode(trigLinks, OUTPUT);
@@ -103,6 +111,33 @@ void loop() {
   } else if (readUs(trigVorne, echoVorne) && (trigRechts, echoRechts) < 10) {
     drehenr(Rechtsdrehung * 2);
     vorne();
+  }
+}
+void stepMotor(int step) {
+  switch (step % 4) {
+    case 0:
+      digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+      digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+      break;
+    case 1:
+      digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+      break;
+    case 2:
+      digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+      break;
+    case 3:
+      digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+      digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+      break;
+  }
+}
+
+void dropkit() {
+  for (int i = 0; i < 181; i++) {
+    stepMotor(i);
+    delay(10);
   }
 }
 void vorne() {                       // vorne
