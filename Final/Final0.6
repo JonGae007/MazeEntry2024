@@ -108,11 +108,16 @@ void loop() {
       digitalWrite(52, LOW);
     }
     else if (b > 10 && b < 25) {
+      
       Serial.print(positionen[i]);
       Serial.println(": Rot");
       digitalWrite(52, HIGH);
       delay(3000);
+     
       digitalWrite(52, LOW);
+       for (int i = 0; i < 181; i++) {
+    stepMotor(i);
+    delay(10);
     }
      Serial.println(); 
     
