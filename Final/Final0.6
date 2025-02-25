@@ -16,28 +16,28 @@ const int IN2 = 44;
 const int IN3 = 46;
 const int IN4 = 48;
 const int stepsPerRevolution = 2048;
-const int trigVorne = 11;
-const int echoVorne = 10;
-const int trigLinks = 13;
-const int echoLinks = 12;
-const int trigRechts = 9;
-const int echoRechts = 8;
-const int trigHinten = 7;
-const int echoHinten = 6;
+const int trigHinten = 11;
+const int echoHinten = 10;
+const int trigRechts = 13;
+const int echoRechts = 12;
+const int trigLinks = 9;
+const int echoLinks = 8;
+const int trigVorne = 7;
+const int echoVorne = 6;
 const int motor1Backward = 24;
 const int motor1Forward = 26;
 const int motor2Backward = 28;
 const int motor2Forward = 30;
-const int motor3Forward = 34;
-const int motor3Backward = 32;
-const int motor4Forward = 36;
-const int motor4Backward = 38;
+const int motor3Forward = 32;
+const int motor3Backward = 34;
+const int motor4Forward = 38;
+const int motor4Backward = 36;
 const int Enable1 = 2;
 const int Enable2 = 3;
 const int Enable3 = 4;
 const int Enable4 = 5;
 //Variabeln
-int Speed = 90;
+int Speed = 150;
 int Rechtsdrehung = 520;
 int Linksdrehung = 600;
 
@@ -75,6 +75,7 @@ void setup() {
   }
 }
 void loop() {
+  vorne();
    const char* positionen[] = {"Links", "Hinten", "Vorne", "Rechts"};
   
    for (int i = 0; i < 4; i++) {
@@ -96,32 +97,23 @@ void loop() {
     if (b > 40 && b < 60) {
       Serial.print(positionen[i]);
       Serial.println(": Silber");
-      digitalWrite(52, HIGH);
-      delay(1000);
-      digitalWrite(52, LOW);
     }
     else if (b < 10) {
       Serial.print(positionen[i]);
       Serial.println(": Schwarz");
-      digitalWrite(52, HIGH);
-      delay(5000);
-      digitalWrite(52, LOW);
     }
     else if (b > 10 && b < 25) {
       
       Serial.print(positionen[i]);
       Serial.println(": Rot");
-      digitalWrite(52, HIGH);
-      delay(3000);
-     
-      digitalWrite(52, LOW);
-       for (int i = 0; i < 181; i++) {
-    stepMotor(i);
-    delay(10);
+    //   for (int i = 0; i < 181; i++) {
+    //stepMotor(i);
+    //delay(10);
     }
      Serial.println(); 
-    
   }
+Serial.print(readUs(trigRechts, echoRechts));
+
   if (readUs(trigRechts, echoRechts) > 10) {
     drehenr(Rechtsdrehung);
     delay(710);
@@ -132,10 +124,10 @@ void loop() {
  //   delay(700);
   
   } else if (readUs(trigVorne, echoVorne) && (trigRechts, echoRechts) < 10) {
-   //drehenr(Rechtsdrehung * 2);
+   drehenr(Rechtsdrehung * 2);
   vorne();
    delay(700);
-  }
+}
 }
 void stepMotor(int step) {
   switch (step % 4) {
@@ -275,9 +267,10 @@ void drehenl(int time) {
 }
 float readUs(int trigPin, int echoPin) {
   digitalWrite(trigPin, HIGH);
-  delayMicroseconds(5);
+  delayMicroseconds(15);
   digitalWrite(trigPin, LOW);
   return pulseIn(echoPin, HIGH, 20000) * 0.034 / 2;
+  Serial1.print("Kein Echo empfangen an Pin ");
 }
 void selectChannel(uint8_t channel) {
   if (channel > 7) return;
