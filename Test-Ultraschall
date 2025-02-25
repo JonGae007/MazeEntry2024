@@ -1,0 +1,40 @@
+// Pins für die Ultraschallsensoren definieren
+const int trigPins[4] = {2, 4, 6, 8};
+const int echoPins[4] = {3, 5, 7, 9};
+
+void setup() {
+    Serial.begin(9600);
+    for (int i = 0; i < 4; i++) {
+        pinMode(trigPins[i], OUTPUT);
+        pinMode(echoPins[i], INPUT);
+    }
+}
+
+void loop() {
+    for (int i = 0; i < 4; i++) {
+        long duration;
+        int distance;
+        
+        // Ultraschallsignal senden
+        digitalWrite(trigPins[i], LOW);
+        delayMicroseconds(2);
+        digitalWrite(trigPins[i], HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trigPins[i], LOW);
+        
+        // Echo-Signal messen
+        duration = pulseIn(echoPins[i], HIGH);
+        
+        // Abstand berechnen (Schallgeschwindigkeit: ~343 m/s)
+        distance = duration * 0.034 / 2;
+        
+        // Ausgabe auf seriellen Monitor
+        Serial.print("Sensor ");
+        Serial.print(i + 1);
+        Serial.print(": ");
+        Serial.print(distance);
+        Serial.println(" cm");
+    }
+    Serial.println("-------------------");
+    delay(500); // Kleine Pause zwischen den Messungen
+}
